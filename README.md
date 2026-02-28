@@ -30,121 +30,15 @@ The application is orchestrated using four primary services:
 
 
 
----
-🛠️ Setup & Installation
-
-This project can be run using Docker (Recommended) or manually without Docker.
-
-🐳 Method 1: Run with Docker (Recommended)
-
-This is the fastest and easiest way to start the full system.
-
-📁 1. Clone the Repository
-git clone <your-repository-url>
+🛠️ Setup & InstallationYou can run this project using Docker (Recommended) or by setting up the services Manually.🐳 Method 1: Run with Docker (Recommended)This is the fastest way to orchestrate the full system including the database, cache, and workers.1. Clone the RepositoryBashgit clone <your-repository-url>
 cd Bus-Booking-App
-🔐 2. Environment Configuration
-
-The required environment file is already included:
-
-backend/.env
-
-It contains the necessary configuration:
-
-DATABASE_URL=your_postgresql_url
-REDIS_URL=redis://redis:6379/0
-SECRET_KEY=your_jwt_secret_key
-MAIL_USERNAME=your_email@gmail.com
-MAIL_PASSWORD=your_app_password
-ADMIN_EMAIL=admin@example.com
-
-Frontend environment (if applicable):
-
-VITE_BACKEND_URL=http://localhost:8000
-▶️ 3. Start All Services
-
-From the root directory:
-
-docker compose up --build
-
-This will automatically start:
-
-✅ Frontend (React + Vite)
-
-✅ Backend (FastAPI)
-
-✅ Redis (Message Broker)
-
-✅ Celery Worker (Background Tasks)
-
-🌐 Application URLs
-
-Frontend → http://localhost:5173
-
-Backend → http://localhost:8000
-
-API Docs → http://localhost:8000/docs
-
-💻 Method 2: Run Without Docker (Manual Setup)
-
-If you prefer running each service manually, follow these steps.
-
-✅ Prerequisites
-
-Make sure you have installed:
-
-Python 3.12
-
-Node.js (LTS)
-
-Redis (installed locally)
-
-PostgreSQL database
-
-🔴 Step 1: Start Redis
-
-Start Redis locally:
-
-redis-server
-
-On Windows:
-
-redis-server.exe
-
-Redis must be running before starting Celery.
-
-🟢 Step 2: Start Backend
-
-Open Terminal 1:
-
-cd backend
+2. Environment ConfigurationThe project uses pre-configured environment files. Ensure the following values are set in backend/.env:VariableDescriptionDATABASE_URLYour PostgreSQL connection stringREDIS_URLredis://redis:6379/0 (Internal Docker DNS)SECRET_KEYYour JWT secret keyMAIL_PASSWORDYour App Password (for notifications)Frontend Environment:Ensure VITE_BACKEND_URL=http://localhost:8000 is set in your frontend config.3. Start All ServicesFrom the root directory, run:Bashdocker compose up --build
+This command spins up:✅ Frontend: React + Vite✅ Backend: FastAPI✅ Redis: Message Broker✅ Celery Worker: Background Tasks💻 Method 2: Manual Setup (No Docker)Use this method if you want to develop individual components locally.✅ PrerequisitesPython: 3.12+ (using uv package manager)Node.js: LTS versionRedis: Installed and running locallyPostgreSQL: Active database instance🔴 Step 1: Start RedisRedis must be running for Celery to manage the task queue.Linux/Mac: redis-serverWindows: redis-server.exe🟢 Step 2: Backend SetupOpen a new terminal:Bashcd backend
 uv sync
 uv run uvicorn src.main:app --reload
-
-Backend will run at:
-
-http://localhost:8000
-🔵 Step 3: Start Frontend
-
-Open Terminal 2:
-
-cd frontend
+API URL: http://localhost:8000Interactive Docs: http://localhost:8000/docs🔵 Step 3: Frontend SetupOpen a second terminal:Bashcd frontend
 npm install
 npm run dev
-
-Frontend will run at:
-
-http://localhost:5173
-🟣 Step 4: Start Celery Worker
-
-Open Terminal 3:
-
-cd backend
+App URL: http://localhost:5173🟣 Step 4: Start Celery WorkerOpen a third terminal. This handles background processes like email confirmations.Bashcd backend
 uv run celery -A src.celery_worker.celery_app worker --loglevel=info
-⚠️ If You Encounter Issues (Especially on Windows)
-
-Run Celery using solo mode:
-
-uv run celery -A src.celery_worker.celery_app worker --loglevel=info --pool=solo
-
---pool=solo avoids multiprocessing issues and is recommended for development environments.
-
+[!TIP]Windows Users: If you encounter multiprocessing errors with Celery, use the solo pool:uv run celery -A src.celery_worker.celery_app worker --loglevel=info --pool=solo
