@@ -154,6 +154,8 @@ async def send_booking_email_async(email_to: str, booking_number: str):
             <p><b>Customer:</b> {email_to}</p>
             <p><b>Trip:</b> {trip.source} to {trip.destination}</p>
             <p><b>Seats:</b> {seat_list}</p>
+            <p><b>Total Amount(Fare):</b> {trip.price}</p>
+
             <hr>
             <p style="font-size: 12px;">System Notification - ABC Travels</p>
         </div>
