@@ -35,6 +35,20 @@ The application is orchestrated using four primary services:
 This project is a full-stack bus reservation system. It leverages a modern tech stack to handle real-time bookings, background task processing for emails, and a responsive user interface.
 
 ---
+## 🔑 Admin Access
+
+The application includes an admin dashboard with additional privileges (e.g., viewing statistics, seeding trips via Excel).  
+Use the following demo credentials to log in as an admin:
+
+- **Email:** `travelsabc3@gmail.com`
+- **Password:** `abctravels123`
+
+Once logged in, you can access the admin panel to:
+- View the dashboard with key metrics.
+- Upload an Excel file to seed new trips in bulk.
+
+> ⚠️ These credentials are for demo purposes only. In a production environment, you should change them and use proper authentication practices.
+
 
 ## 🛠️ Setup & Installation
 
@@ -144,4 +158,5 @@ uv run celery -A src.celery_worker.celery_app worker --loglevel=info
 ```bash
 uv run celery -A src.celery_worker.celery_app worker --loglevel=info --pool=solo
 ```
+
 
