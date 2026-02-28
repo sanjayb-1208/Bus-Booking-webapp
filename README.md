@@ -30,15 +30,118 @@ The application is orchestrated using four primary services:
 
 
 
-🛠️ Setup & InstallationYou can run this project using Docker (Recommended) or by setting up the services Manually.🐳 Method 1: Run with Docker (Recommended)This is the fastest way to orchestrate the full system including the database, cache, and workers.1. Clone the RepositoryBashgit clone <your-repository-url>
+# 🚌 Bus Booking Application
+
+This project is a full-stack bus reservation system. It leverages a modern tech stack to handle real-time bookings, background task processing for emails, and a responsive user interface.
+
+---
+
+## 🛠️ Setup & Installation
+
+You can run this project using **Docker** (Recommended) or by setting up the services **Manually**.
+
+---
+
+### 🐳 Method 1: Run with Docker (Recommended)
+
+This is the fastest way to orchestrate the full system including the database, cache, and workers.
+
+#### 1. Clone the Repository
+
+```bash
+git clone <your-repository-url>
 cd Bus-Booking-App
-2. Environment ConfigurationThe project uses pre-configured environment files. Ensure the following values are set in backend/.env:VariableDescriptionDATABASE_URLYour PostgreSQL connection stringREDIS_URLredis://redis:6379/0 (Internal Docker DNS)SECRET_KEYYour JWT secret keyMAIL_PASSWORDYour App Password (for notifications)Frontend Environment:Ensure VITE_BACKEND_URL=http://localhost:8000 is set in your frontend config.3. Start All ServicesFrom the root directory, run:Bashdocker compose up --build
-This command spins up:✅ Frontend: React + Vite✅ Backend: FastAPI✅ Redis: Message Broker✅ Celery Worker: Background Tasks💻 Method 2: Manual Setup (No Docker)Use this method if you want to develop individual components locally.✅ PrerequisitesPython: 3.12+ (using uv package manager)Node.js: LTS versionRedis: Installed and running locallyPostgreSQL: Active database instance🔴 Step 1: Start RedisRedis must be running for Celery to manage the task queue.Linux/Mac: redis-serverWindows: redis-server.exe🟢 Step 2: Backend SetupOpen a new terminal:Bashcd backend
+```
+
+#### 2. Environment Configuration
+
+Ensure the following values are set in `backend/.env`:
+
+| Variable        | Description |
+|---------------|------------|
+| DATABASE_URL  | Your PostgreSQL connection string |
+| REDIS_URL     | redis://redis:6379/0 |
+| SECRET_KEY    | Your JWT secret key |
+| MAIL_PASSWORD | Your App Password (for notifications) |
+
+Frontend: Ensure `VITE_BACKEND_URL=http://localhost:8000` is set in your frontend configuration.
+
+#### 3. Start All Services
+
+From the root directory, run:
+
+```bash
+docker compose up --build
+```
+
+This spins up:
+
+✅ Frontend (React)  
+✅ Backend (FastAPI)  
+✅ Redis  
+✅ Celery Worker  
+
+---
+
+## 💻 Method 2: Manual Setup (No Docker)
+
+### ✅ Prerequisites
+
+- Python 3.12+ (using `uv`)
+- Node.js (LTS version)
+- Redis & PostgreSQL installed and running locally
+
+---
+
+### 🔴 Step 1: Start Redis
+
+**Linux / Mac**
+```bash
+redis-server
+```
+
+**Windows**
+```bash
+redis-server.exe
+```
+
+---
+
+### 🟢 Step 2: Backend Setup
+
+```bash
+cd backend
 uv sync
 uv run uvicorn src.main:app --reload
-API URL: http://localhost:8000Interactive Docs: http://localhost:8000/docs🔵 Step 3: Frontend SetupOpen a second terminal:Bashcd frontend
+```
+
+API: http://localhost:8000  
+Docs: http://localhost:8000/docs  
+
+---
+
+### 🔵 Step 3: Frontend Setup
+
+```bash
+cd frontend
 npm install
 npm run dev
-App URL: http://localhost:5173🟣 Step 4: Start Celery WorkerOpen a third terminal. This handles background processes like email confirmations.Bashcd backend
+```
+
+URL: http://localhost:5173  
+
+---
+
+### 🟣 Step 4: Start Celery Worker
+
+```bash
+cd backend
 uv run celery -A src.celery_worker.celery_app worker --loglevel=info
-[!TIP]Windows Users: If you encounter multiprocessing errors with Celery, use the solo pool:uv run celery -A src.celery_worker.celery_app worker --loglevel=info --pool=solo
+```
+
+> 💡 **Windows Users:** If Celery fails, use:
+
+```bash
+uv run celery -A src.celery_worker.celery_app worker --loglevel=info --pool=solo
+```
+
